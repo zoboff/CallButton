@@ -14,7 +14,7 @@ import wstyle
 # Configuration
 # ========================
 ROOM_IP: str = "127.0.0.1"
-ROOM_PORT: int = 2233
+ROOM_PORT: int = 80
 PIN: str = "123"
 MINMAX_APPLICATION: bool = True
 CALL_ID: str = "echotest_es@trueconf.com"
@@ -124,7 +124,7 @@ class KioskButton(QWidget):
             if self.state in [4, 5]:
                 methods.showMainWindow(True, False)  # Maximized
             else:
-                methods.showMainWindow(False)  # Minimized, Hiden
+                methods.showMainWindow(False, False)  # Minimized, Hiden
 
     @pyqtSlot()
     def on_click_call(self):
