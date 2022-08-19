@@ -112,6 +112,12 @@ STYLE_RED_BUTTON: str = '''background-color: red;
                     color: white;
                     font: bold 28px'''
 
+STYLE_RED_BUTTON_FLASH: str = '''background-color: #EE1010;
+                    border-radius: 6px;
+                    padding: 20px;
+                    color: white;
+                    font: bold 28px'''
+
 STYLE_GREEN_BUTTON: str = '''background-color: green;
                     border-radius: 6px;
                     padding: 20px;

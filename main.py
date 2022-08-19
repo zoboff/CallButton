@@ -13,18 +13,20 @@ import wstyle
 # ========================
 # Configuration
 # ========================
+CALL_ID: str = "echotest_es@trueconf.com"
+
 ROOM_IP: str = "127.0.0.1"
 ROOM_PORT: int = 80
 PIN: str = "123"
 MINMAX_APPLICATION: bool = True
-CALL_ID: str = "echotest_es@trueconf.com"
+FORCED_STAY_ON_TOP: bool = False
 # ========================
 
 TITLE: str = "Button Video Calling Demo"
 BUTTON_WIDTH: int = 160
 BUTTON_HEIGHT: int = 90
 INDENT: int = 100
-MONITOR: int = 0
+MONITOR: int = 1
 IMAGE_BUTTON: str = "call.png"
 ICON_SIZE: int = 64
 
@@ -97,12 +99,18 @@ class KioskButton(QWidget):
 
     def flashing(self):
         if self.state == 3:
-            if self.buttonCallTag:
-                self.buttonCall.setStyleSheet(wstyle.STYLE_GREEN_BUTTON_FLASH)
-            else:
-                self.buttonCall.setStyleSheet(wstyle.STYLE_GREEN_BUTTON)
+            style = wstyle.STYLE_GREEN_BUTTON_FLASH if self.buttonCallTag else wstyle.STYLE_GREEN_BUTTON
+        elif self.state in [4, 5]:
+            style = wstyle.STYLE_RED_BUTTON_FLASH if self.buttonCallTag else wstyle.STYLE_RED_BUTTON
+        else:
+            style = wstyle.STYLE_GRAY_BUTTON
+        # Set button style
+        self.buttonCall.setStyleSheet(style)
 
         self.buttonCallTag = not self.buttonCallTag
+        # Frameless window
+        self.setWindowFlags(Qt.WindowStaysOnTopHint
+                            | Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint | Qt.Dialog)
 
     def connectToRoom(self):
         pass
@@ -111,18 +119,9 @@ class KioskButton(QWidget):
         # Get the current state
         self.state = response["appState"]
 
-        # Set button color according to status
-        if self.state == 3:
-            style = wstyle.STYLE_GREEN_BUTTON
-        elif self.state in [4, 5]:
-            style = wstyle.STYLE_RED_BUTTON
-        else:
-            style = wstyle.STYLE_GRAY_BUTTON
-        self.buttonCall.setStyleSheet(style)
-
         if MINMAX_APPLICATION:
             if self.state in [4, 5]:
-                methods.showMainWindow(True, False)  # Maximized
+                methods.showMainWindow(True, FORCED_STAY_ON_TOP)  # Maximized
             else:
                 methods.showMainWindow(False, False)  # Minimized, Hiden
 
